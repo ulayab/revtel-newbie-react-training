@@ -6,7 +6,7 @@ const fakeAPIData = { "result": { "offset": 0, "limit": 10000, "count": 295, "so
 
 const fakeAPIFetch = () => {
   return new Promise((resolve, reject) => {
-    setTimeout(() => resolve(fakeAPIData), 3000);
+    setTimeout(() => resolve(fakeAPIData), 300);
   });
 }
 
@@ -52,27 +52,6 @@ class App extends Component {
 
   render() {
     console.log('render ', this.state.isFetching, this.state.parkList)
-    let parkListItems = (<div />);
-
-    if (this.state.isFetching) {
-      parkListItems = (
-        <p>now is fetching</p>
-      )
-    } else {
-      let items = []
-      for (let i = 0; i < this.state.parkList.length; i++) {
-        items.push(
-          <div key={i}>
-            {this.state.parkList[i].ParkName}
-          </div>
-        )
-      }
-      parkListItems = (
-        <div>
-          {items}
-        </div>
-      )
-    }
 
     return (
       <div className='App'>
@@ -83,7 +62,11 @@ class App extends Component {
         <p className='App-intro'>
           To get started, edit <code>src/App.js</code> and save to reload !!!!!
         </p>
-        {parkListItems}
+        {
+          this.state.isFetching
+            ? 'now is fetching'
+            : this.state.parkList.map((element, idx) => <div key={idx}>{element.ParkName}</div>)
+        }
       </div>
     )
   }
