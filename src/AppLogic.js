@@ -3,6 +3,6 @@ const fakeAPIData = { "result": { "offset": 0, "limit": 10000, "count": 295, "so
 
 export const getAppData = () => {
 		return new Promise((resolve, reject) => {
-			setTimeout(() => resolve(fakeAPIData), 300);
+			setTimeout(() => resolve(fakeAPIData), 10);
 		});
 }
