@@ -70,28 +70,14 @@ class UserSearch extends Component {
 	}
 }
 
-class ParkItems extends Component {
-	render() {
-		let { isFetching } = this.props;
-
-		return isFetching ? this._renderFetching() : this._renderItems();
+const ParkItems = ({ isFetching, parkList, filterInput }) => {
+	if (isFetching) {
+		return <div>Fetching ...</div>
 	}
 
-	_renderFetching() {
-		return (
-			<div>Fetching ...</div>
-		)
-	}
-
-	_renderItems() {
-		let { parkList, filterInput } = this.props;
-
-		const filterParkItemFunc = ele => (ele.ParkName + ':' + ele.Name).indexOf(filterInput) !== -1;
-
-		return parkList
-			.filter(filterParkItemFunc)
-			.map((parkData, idx) => <ParkItem parkData={parkData} key={idx} />);
-	}
+	return parkList
+		.filter(({ParkName, Name}) => (ParkName + ':' + Name).indexOf(filterInput) !== -1)
+		.map((parkData, idx) => <ParkItem parkData={parkData} key={idx} />);
 }
 
 class ParkItem extends Component {
