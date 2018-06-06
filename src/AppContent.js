@@ -9,7 +9,6 @@ export default class AppContent extends Component {
 			isFetching: true,
 
 			filterInput: '',
-			clickRecord: [],
 		}
 	}
 
@@ -19,7 +18,6 @@ export default class AppContent extends Component {
 				this.setState({
 					isFetching: false,
 					parkList: data.result.results,
-					clickRecord: data.result.results.map(() => false),
 				})
 			})
 	}
@@ -28,7 +26,7 @@ export default class AppContent extends Component {
 		let { isFetching, parkList, filterInput, clickRecord } = this.state;
 
 		return (
-			<div>
+			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 				<UserSearch onChange={text => this.setState({ filterInput: text })} />
 				<ParkItems isFetching={isFetching}
 					parkList={parkList}
@@ -86,35 +84,41 @@ class ParkItems extends Component {
 	}
 
 	_renderItems() {
-		let { parkList, filterInput, clickRecord } = this.props;
+		let { parkList, filterInput } = this.props;
 
-		const generateParkItem = (parkData, idx) => {
-			let myStyle = clickRecord[idx] ? styles.parkItemLikedStyle : styles.parkItemStyle
-			return (
-				<div
-					key={idx}
-					style={myStyle}
-					onClick={() => {
-						let newArray = [...clickRecord];
-						newArray[idx] = !clickRecord[idx]
-						this.setState({ clickRecord: newArray })
-					}}
-				>
-					{parkData.ParkName + ' : ' + parkData.Name}
-				</div>
-			)
-		}
-		const filteredItems = parkList.filter((ele) => {
-			return (ele.ParkName + ':' + ele.Name).indexOf(filterInput) !== -1
-		});
-		const parkListItems = filteredItems.map(generateParkItem)
+		const filterParkItemFunc = ele => (ele.ParkName + ':' + ele.Name).indexOf(filterInput) !== -1;
 
-		return (
-			<div style={styles.containerStyle}>{parkListItems}</div>
-		)
+		return parkList
+			.filter(filterParkItemFunc)
+			.map((parkData, idx) => <ParkItem parkData={parkData} key={idx} />);
 	}
 }
 
+class ParkItem extends Component {
+	constructor(props) {
+		super(props)
+		this.state = {
+			isClicked: false,
+		}
+	}
+
+	render() {
+		let { isClicked } = this.state;
+		let { parkData } = this.props;
+
+		let myStyle = isClicked ? styles.parkItemLikedStyle : styles.parkItemStyle
+		return (
+			<div
+				style={myStyle}
+				onClick={() => {
+					this.setState({ isClicked: !isClicked })
+				}}
+			>
+				{parkData.ParkName + ' : ' + parkData.Name}
+			</div>
+		)
+	}
+}
 
 const styles = {
 	parkItemStyle: {
