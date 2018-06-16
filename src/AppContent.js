@@ -26,7 +26,8 @@ export default class AppContent extends Component {
 		let { isFetching, parkList, filterInput, clickRecord } = this.state;
 
 		return (
-			<div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+			<div>
+				<h2>公園查詢系統</h2>
 				<UserSearch onChange={text => this.setState({ filterInput: text })} />
 				<ParkItems isFetching={isFetching}
 					parkList={parkList}
@@ -42,32 +43,58 @@ class UserSearch extends Component {
 	constructor(props) {
 		super(props)
 		this.state = {
-			userInput: '',
+			userInput1: '',
+			userInput2: ''
 		}
 
-		this.handleInputChange = this.handleInputChange.bind(this)
+		this.handleInputChange1 = this.handleInputChange1.bind(this)
+		this.handleInputChange2 = this.handleInputChange2.bind(this)
 	}
 
 	render() {
-		let { userInput } = this.state;
+		let { userInput1 , userInput2 } = this.state;
 
 		return (
-			<input style={styles.inputStyle}
-				type='text'
-				placeholder={'請輸入欲查詢公園 (如：二二八和平公園)'}
-				value={userInput}
-				onChange={this.handleInputChange}
-			/>
+			<div style={{display:'flex',flexDirection: 'row',flexWrap:'wrap',justifyContent: 'space-around'}}>
+				<input style={styles.inputStyle}
+					type='text'
+					placeholder={'請輸入欲查詢公園名稱、公園景點'}
+					value={userInput1}
+					onChange={this.handleInputChange1}
+				/>
+				<input style={styles.inputStyle}
+					type='text'
+					placeholder={'請輸入欲查詢公園介紹關鍵字'}
+					value={userInput2}
+					onChange={this.handleInputChange2}
+				/>
+			</div>
 		)
 	}
 
-	handleInputChange(evt) {
-		this.setState({ userInput: evt.target.value });
+	handleInputChange1(evt) {
+		this.setState({userInput1: evt.target.value});
+			
 
 		if (this.props.onChange) {
 			this.props.onChange(evt.target.value)
 		}
+
 	}
+
+	handleInputChange2(evt) {
+
+		this.setState({userInput2: evt.target.value});
+		
+			
+
+		if (this.props.onChange) {
+			this.props.onChange(evt.target.value)
+		}
+
+		
+	}
+
 }
 
 const ParkItems = ({ isFetching, parkList, filterInput }) => {
@@ -75,9 +102,16 @@ const ParkItems = ({ isFetching, parkList, filterInput }) => {
 		return <div>Fetching ...</div>
 	}
 
-	return parkList
-		.filter(({ParkName, Name}) => (ParkName + ':' + Name).indexOf(filterInput) !== -1)
-		.map((parkData, idx) => <ParkItem parkData={parkData} key={idx} />);
+	let parkDetails = parkList
+		.filter(({ParkName, Name , Introduction}) => (ParkName + ':' + Name + Introduction).indexOf(filterInput) !== -1)
+		.map((parkData, idx) => <ParkItem parkData={parkData} key={idx} />)
+
+	return (
+		<div style={{display:'flex',flexDirection: 'row',flexWrap:'wrap',justifyContent: 'center'}}>
+			{parkDetails}
+		</div>
+	
+	)
 }
 
 class ParkItem extends Component {
@@ -101,6 +135,8 @@ class ParkItem extends Component {
 				}}
 			>
 				{parkData.ParkName + ' : ' + parkData.Name}
+				<br/><br/>
+				{parkData.Introduction}
 			</div>
 		)
 	}
@@ -109,14 +145,14 @@ class ParkItem extends Component {
 const styles = {
 	parkItemStyle: {
 		backgroundColor: 'lightgrey',
-		width: '50%',
+		width: '45%',
 		padding: 20,
 		marginTop: 20,
 		borderRadius: 20,
 	},
 	parkItemLikedStyle: {
 		backgroundColor: '#FCF3CF',
-		width: '50%',
+		width: '45%',
 		padding: 20,
 		marginTop: 20,
 		borderRadius: 20,
@@ -128,8 +164,12 @@ const styles = {
 		alignItems: 'center',
 	},
 	inputStyle: {
-		width: '45%',
-		hight: 80,
-		marginTop: 30,
+		width: '450px',
+		hight: 250,
+		marginTop: 10,
+		fontSize: '12pt',
+
+		textAlign: 'center'
+
 	}
 }
