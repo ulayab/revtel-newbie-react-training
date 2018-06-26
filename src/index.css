@@ -3,3 +3,16 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.flex {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+.item {
+  flex: 1;
+  margin: 5px;
+  display: inline-flex;
+  color: white;
+  font-size: 15px;
+}
